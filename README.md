@@ -20,7 +20,8 @@ The purpose of this module is to create a repository for Elastic Amazon Registry
 | aws\_region | The aws region to deploy the repository | string | n/a |
 | project | The project name | string | n/a |
 | service | The service name | string | n/a |
-| tagged\_count | The number of versioned image version saved | number | 3 |
+| tag\_prefix\_list | Only used if you specified 'tagStatus': 'tagged'. You must specify a comma-separated list of image tag prefixes on which to take action with your lifecycle policy. For example, if your images are tagged as prod, prod1, prod2, and so on, you would use the tag prefix prod to specify all of them. If you specify multiple tags, only the images with all specified tags are selected. | list(string) | \["v", "V"\] |
+| tagged\_count | The number of versioned image version saved | number | 0 |
 | untagged\_duration | The duration in days of conservation of non-versioned images | number | 60 |
 
 ### Outputs

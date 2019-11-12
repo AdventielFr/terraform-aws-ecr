@@ -8,30 +8,36 @@ resource "aws_ecr_repository" "this" {
   }
 }
 
-data "template_file" "this_tagged_count" {
-  template = file("${path.module}/ecr_this_tagged_count_policy.tpl")
+locals {
+  active_tagged_policy = var.tagged_count > 0 && len(var.tag_prefix_list) > 0
+}
+
+
+data "template_file" "template_tagged_policy" {
+  template = file("${path.module}/ecr_tagged_policy.tpl")
 
   vars = {
-    tagged_count = var.tagged_count
+    tagged_count    = var.tagged_count
+    tag_prefix_list = jsonencode(var.tag_prefix_list)
   }
 }
 
-data "template_file" "this_untagged_duration" {
-  template = file("${path.module}/ecr_untagged_duration_policy.tpl")
+data "template_file" "template_untagged_policy" {
+  template = file("${path.module}/ecr_untagged_policy.tpl")
 
   vars = {
     untagged_duration = var.untagged_duration
   }
 }
 
-resource "aws_ecr_lifecycle_tagged_count" "this" {
-  count      = var.tagged_count > 0 ? 1 : 0
+resource "aws_ecr_lifecycle_policy" "tagged_lifecycle_policy" {
+  count      = local.active_tagged_policy ? 1 : 0
   repository = aws_ecr_repository.this.name
-  policy     = data.template_file.this_tagged_count.rendered
+  policy     = data.template_file.template_tagged_policy.rendered
 }
 
-resource "aws_ecr_lifecycle_untagged_duration" "this" {
+resource "aws_ecr_lifecycle_policy" "untagged_lifecycle_policy" {
   count      = var.untagged_duration > 0 ? 1 : 0
   repository = aws_ecr_repository.this.name
-  policy     = data.template_file.this_untagged_duration.rendered
+  policy     = data.template_file.template_untagged_policy.rendered
 }
