@@ -39,9 +39,8 @@ The purpose of this module is to create a repository for Elastic Amazon Registry
 module "module" {
   source  = "git::https://github.com/AdventielFr/terraform-aws-ecr.git?ref=1.0.0"
 
-  aws_region   = "eu-west-1"
-  service      = "you-service"
-  project      = "your-project"
-  tagged_count = "3"
-  untagged_duration = "60"
+  aws_region          = "eu-west-1"
+  service             = "you-service"
+  project             = "your-project"
+  untagged_duration   = "60"
 }
