@@ -9,7 +9,7 @@ resource "aws_ecr_repository" "this" {
 }
 
 locals {
-  active_tagged_policy = var.tagged_count > 0 && len(var.tag_prefix_list) > 0
+  active_tagged_policy = var.tagged_count > 0 && length(var.tag_prefix_list) > 0
 }
 
 
